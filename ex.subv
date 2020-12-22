@@ -1,0 +1,16 @@
+== code 0x80000000
+# repeatedly print "Hi\n"
+main:
+  # load 0x10010000 (UART0) into t0
+  37/lui 5/rd/t0 0x10010/imm20
+  # store 0x48 (H) in UART0+0
+  13/opi 0/subop/add 6/rd/t1 0/rs/x0 48/imm12
+  23/store 2/subop/word 5/rs/t0 6/rs/t1 0/off12
+  # store 0x69 (i) in UART0+0
+  13/opi 0/subop/add 6/rd/t1 0/rs/x0 69/imm12
+  23/store 2/subop/word 5/rs/t0 6/rs/t1 0/off12
+  # store 0x0a (\n) in UART0+0
+  13/opi 0/subop/add 6/rd/t1 0/rs/x0 0a/imm12
+  23/store 2/subop/word 5/rs/t0 6/rs/t1 0/off12
+  # jump back up to the top
+  6f/jal 0/rd/x0 main/off21

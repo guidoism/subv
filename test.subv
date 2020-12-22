@@ -1,0 +1,31 @@
+== code 0x80000000
+main:
+  # load 0x10010000 (UART0) into t0
+  37/lui 5/rd/t0 0x10010/imm20
+
+  # x4 = &message
+  # . load high bits
+  37/lui 4/rd/x4 Message/imm20
+  # . add low bits
+  13/opi 0/subop/add 4/rd/x4 4/rs/x4 Message/imm12
+print:loop:
+  # load unsigned byte at x4
+  03/load 4/subop/lbu 6/rd/t1 4/rs/x4 0/imm12
+  # break loop if zero
+  63/branch 0/subop/== 6/rs/t1 0/rs/x0 print:break/off12
+  # print char
+  23/store 2/subop/word 5/rs/t0 6/rs/t1 0/off12
+  # increment x4
+  13/opi 0/subop/add 4/rd/x4 4/rs/x4 1/imm12
+  # jump back up
+  6f/jal 0/rd/x0 print:loop/off20
+print:break:
+
+loop:
+  # infinite loop
+  6f/jal 0/rd/x0 loop/off20
+
+== data 0x80001000
+Message:
+  # "Hello World\n\0"
+  48/8 65/8 6c/8 6c/8 6f/8 20/8 77/8 6f/8 72/8 6c/8 64/8 21/8 0a/8 00/8
